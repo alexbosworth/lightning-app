@@ -192,9 +192,11 @@ class WalletAction {
   /**
    * Initiate the lnd wallet using the generated seed and password. If this
    * is success set `walletUnlocked` to true and navigate to the seed success
-   * screen.
+   * screen. Otherwise, display an error and navigate back to the seed select
+   * view.
    * @param  {string} options.walletPassword The user chosen password
    * @param  {Array}  options.seedMnemonic   The seed words to generate the wallet
+   * @param  {number} options.recoveryWindow The number of addresses to recover
    * @return {Promise<undefined>}
    */
   async initWallet({ walletPassword, seedMnemonic, recoveryWindow }) {
@@ -207,7 +209,14 @@ class WalletAction {
       this._store.walletUnlocked = true;
       this._nav.goSeedSuccess();
     } catch (err) {
-      this._notification.display({ msg: 'Initializing wallet failed', err });
+      this._nav.goSelectSeed();
+      this._notification.display({
+        type: 'error',
+        msg: 'Initializing wallet failed',
+      });
+    }
+  }
+
   /**
    * Initialize the restore wallet view by resetting input values and then
    * navigating to the view.

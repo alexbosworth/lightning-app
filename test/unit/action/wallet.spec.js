@@ -242,6 +242,7 @@ describe('Action Wallet Unit Tests', () => {
         recoveryWindow: 0,
       });
       expect(notification.display, 'was called once');
+      expect(nav.goSelectSeed, 'was called once');
       expect(nav.goSeedSuccess, 'was not called');
     });
   });
