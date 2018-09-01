@@ -7,14 +7,37 @@ import { computed, extendObservable } from 'mobx';
 const ComputedSeed = store => {
   extendObservable(store, {
     seedVerifyIndexes: computed(() => {
-      const { seedMnemonic: words } = store;
-      return words.length ? getSeedIndexes(1, words.length, 3) : [];
+      if (store.wallet.restoring) {
+        let indexes = [...Array(24).keys()].map(x => ++x);
+        // Shuffle the array.
+        for (let i = 23; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+        }
+        // Sort each group of 3 within the array so each individual list
+        // is sorted.
+        for (let i = 0; i < 24; i += 3) {
+          let group = indexes.slice(i, i + 3).sort((a, b) => a - b);
+          [indexes[i], indexes[i + 1], indexes[i + 2]] = [
+            group[0],
+            group[1],
+            group[2],
+          ];
+        }
+        return indexes;
+      } else {
+        const { seedMnemonic: words } = store;
+        return words.length ? getSeedIndexes(1, words.length, 3) : [];
+      }
     }),
     seedVerifyCopy: computed(() => {
       const { seedVerifyIndexes } = store;
-      const c0 = formatOrdinal(seedVerifyIndexes[0]);
-      const c1 = formatOrdinal(seedVerifyIndexes[1]);
-      const c2 = formatOrdinal(seedVerifyIndexes[2]);
+      const startingIndex = store.wallet.restoring
+        ? store.wallet.restoreIndex
+        : 0;
+      const c0 = formatOrdinal(seedVerifyIndexes[startingIndex]);
+      const c1 = formatOrdinal(seedVerifyIndexes[startingIndex + 1]);
+      const c2 = formatOrdinal(seedVerifyIndexes[startingIndex + 2]);
       return `Type the ${c0}, ${c1}, and ${c2} words of your recovery phrase.`;
     }),
   });

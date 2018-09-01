@@ -54,6 +54,17 @@ describe('Computed Seed Unit Tests', () => {
       }
       expect(store.seedVerifyCopy, 'to match', /^Type /);
     });
+
+    it('should set seed check attributes during restore', () => {
+      store.wallet.restoring = true;
+      ComputedSeed(store);
+      expect(store.seedVerifyIndexes.length, 'to equal', 24);
+      for (let i = 0; i < 24; i++) {
+        expect(store.seedVerifyIndexes[i], 'to be greater than', 0);
+        expect(store.seedVerifyIndexes[i], 'to be less than', 25);
+      }
+      expect(store.seedVerifyCopy, 'to match', /^Type /);
+    });
   });
 
   describe('formatOrdinal()', () => {
