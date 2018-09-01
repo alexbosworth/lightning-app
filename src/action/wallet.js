@@ -87,6 +87,14 @@ class WalletAction {
     this._store.wallet.passwordVerify = password;
   }
 
+  /**
+   * Set whether or not we're restoring the wallet.
+   * @param {boolean} options.restoring Whether or not we're restoring.
+   */
+  setRestoringWallet({ restoring }) {
+    this._store.wallet.restoring = restoring;
+  }
+
   //
   // Wallet actions
   //
