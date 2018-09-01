@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 const RestoreWalletView = ({ store, nav, wallet }) => (
   <Background image="purple-gradient-bg">
     <Header>
-      <BackButton onPress={() => nav.goSeed()} />
+      <BackButton onPress={() => nav.goSelectSeed()} />
       <Button disabled onPress={() => {}} />
     </Header>
     <MainContent style={styles.content}>
@@ -44,18 +44,22 @@ const RestoreWalletView = ({ store, nav, wallet }) => (
       </View>
       <Card style={styles.card}>
         <FormSubText>{store.seedVerifyCopy}</FormSubText>
-        {store.seedVerifyIndexes.map((seedIndex, i) => (
-          <SeedEntry
-            seedIndex={seedIndex}
-            value={store.wallet.seedVerify[i]}
-            onChangeText={word => wallet.setSeedVerify({ word, index: i })}
-            key={i}
-            autoFocus={i === 0}
-            onSubmitEditing={() => wallet.checkSeed()}
-          />
-        ))}
+        {store.seedVerifyIndexes
+          .slice(store.wallet.restoreIndex, store.wallet.restoreIndex + 3)
+          .map((seedIndex, i) => (
+            <SeedEntry
+              seedIndex={seedIndex}
+              value={store.wallet.seedVerify[seedIndex - 1]}
+              onChangeText={word =>
+                wallet.setSeedVerify({ word, index: seedIndex - 1 })
+              }
+              key={i}
+              autoFocus={i === 0}
+              onSubmitEditing={() => wallet.initNextRestorePage()}
+            />
+          ))}
       </Card>
-      <GlasButton onPress={() => wallet.checkSeed()}>Next</GlasButton>
+      <GlasButton onPress={() => wallet.initNextRestorePage()}>Next</GlasButton>
     </MainContent>
   </Background>
 );
