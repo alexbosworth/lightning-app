@@ -7,6 +7,7 @@ import NotificationAction from '../../../src/action/notification';
 import * as logger from '../../../src/action/log';
 import nock from 'nock';
 import 'isomorphic-fetch';
+import { RECOVERY_WINDOW } from '../../../src/config';
 
 describe('Action Wallet Unit Tests', () => {
   let store;
@@ -186,6 +187,7 @@ describe('Action Wallet Unit Tests', () => {
       expect(wallet.initWallet, 'was called with', {
         walletPassword: 'secret123',
         seedMnemonic: ['foo', 'bar', 'baz'],
+        recoveryWindow: 0,
       });
     });
 
@@ -209,11 +211,16 @@ describe('Action Wallet Unit Tests', () => {
   describe('initWallet()', () => {
     it('should init wallet', async () => {
       grpc.sendUnlockerCommand.withArgs('InitWallet').resolves();
-      await wallet.initWallet({ walletPassword: 'baz', seedMnemonic: ['foo'] });
+      await wallet.initWallet({
+        walletPassword: 'baz',
+        seedMnemonic: ['foo'],
+        recoveryWindow: 0,
+      });
       expect(store.walletUnlocked, 'to be', true);
       expect(grpc.sendUnlockerCommand, 'was called with', 'InitWallet', {
         wallet_password: Buffer.from('baz', 'utf8'),
         cipher_seed_mnemonic: ['foo'],
+        recovery_window: 0,
       });
       expect(nav.goSeedSuccess, 'was called once');
     });
@@ -222,7 +229,11 @@ describe('Action Wallet Unit Tests', () => {
       grpc.sendUnlockerCommand
         .withArgs('InitWallet')
         .rejects(new Error('Boom!'));
-      await wallet.initWallet({ walletPassword: 'baz', seedMnemonic: ['foo'] });
+      await wallet.initWallet({
+        walletPassword: 'baz',
+        seedMnemonic: ['foo'],
+        recoveryWindow: 0,
+      });
       expect(notification.display, 'was called once');
       expect(nav.goSeedSuccess, 'was not called');
     });
