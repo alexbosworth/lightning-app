@@ -60,6 +60,7 @@ class MainView extends Component {
         {route === 'SelectSeed' && (
           <SelectSeed store={store} wallet={wallet} nav={nav} />
         )}
+        {route === 'Seed' && <Seed store={store} wallet={wallet} nav={nav} />}
         {route === 'SeedVerify' && (
           <SeedVerify store={store} nav={nav} wallet={wallet} />
         )}

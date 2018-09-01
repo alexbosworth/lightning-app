@@ -85,6 +85,7 @@ storiesOf('Screens', module)
   .add('Select Seed', () => (
     <SelectSeed store={store} wallet={wallet} nav={nav} />
   ))
+  .add('Seed', () => <Seed store={store} wallet={wallet} nav={nav} />)
   .add('Seed Verify', () => (
     <SeedVerify store={store} nav={nav} wallet={wallet} />
   ))

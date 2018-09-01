@@ -4,16 +4,21 @@ import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import MainContent from '../component/main-content';
 import { CopyText, H1Text, Text } from '../component/text';
+import { Header } from '../component/header';
 import { SplitBackground } from '../component/background';
-import { GlasButton } from '../component/button';
+import { Button, BackButton, GlasButton } from '../component/button';
 import { color, font } from '../component/style';
 
 //
 // Seed View
 //
 
-const SeedView = ({ store, wallet }) => (
+const SeedView = ({ store, wallet, nav }) => (
   <SplitBackground image="purple-gradient-bg" bottom={color.blackDark}>
+    <Header>
+      <BackButton onPress={() => nav.goSelectSeed()} />
+      <Button disabled onPress={() => {}} />
+    </Header>
     <CopySection />
     <MainContent>
       <WordList seedMnemonic={store.seedMnemonic.slice()} />
@@ -25,6 +30,7 @@ const SeedView = ({ store, wallet }) => (
 SeedView.propTypes = {
   store: PropTypes.object.isRequired,
   wallet: PropTypes.object.isRequired,
+  nav: PropTypes.object.isRequired,
 };
 
 //
