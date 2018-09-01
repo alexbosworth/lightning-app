@@ -267,6 +267,7 @@ describe('Action Wallet Unit Tests', () => {
   describe('checkPassword()', () => {
     beforeEach(() => {
       sandbox.stub(wallet, 'unlockWallet');
+      sandbox.stub(wallet, 'initWallet');
     });
 
     it('calls unlockWallet with password', async () => {
@@ -275,6 +276,22 @@ describe('Action Wallet Unit Tests', () => {
       expect(wallet.unlockWallet, 'was called with', {
         walletPassword: 'secret123',
       });
+      expect(wallet.initWallet, 'was not called');
+    });
+
+    it('calls initWallet if restoring is true', async () => {
+      store.wallet.restoring = true;
+      wallet.setPassword({ password: 'secret123' });
+      wallet.setSeedVerify({ word: 'foo', index: 0 });
+      wallet.setSeedVerify({ word: 'bar', index: 1 });
+      wallet.setSeedVerify({ word: 'baz', index: 2 });
+      await wallet.checkPassword();
+      expect(wallet.initWallet, 'was called with', {
+        walletPassword: 'secret123',
+        seedMnemonic: ['foo', 'bar', 'baz'],
+        recoveryWindow: RECOVERY_WINDOW,
+      });
+      expect(wallet.unlockWallet, 'was not called');
     });
   });
 

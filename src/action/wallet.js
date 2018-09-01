@@ -213,11 +213,22 @@ class WalletAction {
 
   /**
    * Check the password input by the user by attempting to unlock the wallet.
+   * If we are currently restoring the wallet, initialize the wallet with
+   * the password input the seed that was already inputted, and the default
+   * recovery window.
    * @return {Promise<undefined>}
    */
   async checkPassword() {
     const { password } = this._store.wallet;
-    await this.unlockWallet({ walletPassword: password });
+    if (this._store.wallet.restoring) {
+      await this.initWallet({
+        walletPassword: password,
+        seedMnemonic: this._store.wallet.seedVerify.toJSON(),
+        recoveryWindow: RECOVERY_WINDOW,
+      });
+    } else {
+      await this.unlockWallet({ walletPassword: password });
+    }
   }
 
   /**
