@@ -246,6 +246,33 @@ describe('Action Wallet Unit Tests', () => {
     });
   });
 
+  describe('initRestoreWallet()', () => {
+    it('should clear attributes and navigate to view', () => {
+      store.wallet.seedVerify = [];
+      store.wallet.restoreIndex = 42;
+      wallet.initRestoreWallet();
+      expect(store.wallet.seedVerify.length, 'to equal', 24);
+      expect(store.wallet.restoreIndex, 'to equal', 0);
+      expect(nav.goRestoreWallet, 'was called once');
+    });
+  });
+
+  describe('initNextRestorePage()', () => {
+    it('should navigate to password screen if restoreIndex > 20', () => {
+      store.wallet.restoreIndex = 21;
+      wallet.initNextRestorePage();
+      expect(nav.goPassword, 'was called once');
+      expect(store.wallet.restoreIndex, 'to equal', 21);
+    });
+
+    it('should increment restoreIndex if less than 21', async () => {
+      store.wallet.restoreIndex = 18;
+      wallet.initNextRestorePage();
+      expect(nav.goPassword, 'was not called');
+      expect(store.wallet.restoreIndex, 'to equal', 21);
+    });
+  });
+
   describe('initInitialDeposit()', () => {
     it('should navigate to new address screen if address is non-null', () => {
       store.walletAddress = 'non-null-addr';

@@ -41,6 +41,7 @@ export class Store {
         passwordVerify: '',
         seedVerify: ['', '', ''],
         restoring: false,
+        restoreIndex: 0,
       },
       transactions: [],
       selectedTransaction: null,
