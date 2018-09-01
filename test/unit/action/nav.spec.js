@@ -46,7 +46,7 @@ describe('Action Nav Unit Tests', () => {
     });
   });
 
-  describe.skip('goRestoreWallet()', () => {
+  describe('goRestoreWallet()', () => {
     it('should set correct route', () => {
       nav.goRestoreWallet();
       expect(store.route, 'to equal', 'RestoreWallet');
