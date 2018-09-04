@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import Background from '../component/background';
 import MainContent from '../component/main-content';
 import { H1Text, CopyText } from '../component/text';
-import { FormStretcher } from '../component/form';
 import { RadioButton, GlasButton } from '../component/button';
 import { SettingItem } from '../component/list';
 import { color } from '../component/style';
@@ -17,17 +16,16 @@ import { color } from '../component/style';
 const styles = StyleSheet.create({
   content: {
     justifyContent: 'center',
-    paddingBottom: 75,
     paddingLeft: 50,
     paddingRight: 50,
   },
   copyTxt: {
     textAlign: 'center',
     marginTop: 10,
+    maxWidth: 450,
   },
   list: {
-    flex: 1,
-    justifyContent: 'flex-start',
+    marginTop: 50,
     width: 400,
   },
 });
@@ -35,22 +33,20 @@ const styles = StyleSheet.create({
 const SelectSeedView = ({ store, wallet, nav }) => (
   <Background color={color.blackDark}>
     <MainContent style={styles.content}>
-      <FormStretcher>
-        <H1Text>Recovery phrase?</H1Text>
-        <CopyText style={styles.copyTxt}>
-          If you already have a recovery phrase, you can use that now.
-          Otherwise, you should generate a new one.
-        </CopyText>
-      </FormStretcher>
+      <H1Text>Recovery phrase?</H1Text>
+      <CopyText style={styles.copyTxt}>
+        If you already have a recovery phrase, you can use that now. Otherwise,
+        you should generate a new wallet.
+      </CopyText>
       <View style={styles.list}>
         <SettingItem
-          name="Generate a new recovery phrase"
+          name="Generate a new wallet"
           onSelect={() => wallet.setRestoringWallet({ restoring: false })}
         >
           <RadioButton selected={store.wallet.restoring === false} />
         </SettingItem>
         <SettingItem
-          name="I already have a recovery phrase"
+          name="Recover an existing wallet"
           onSelect={() => wallet.setRestoringWallet({ restoring: true })}
         >
           <RadioButton selected={store.wallet.restoring === true} />
